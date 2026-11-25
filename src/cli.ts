@@ -135,15 +135,19 @@ else if (command === 'stats') {
   if (!values.index)
     fail('usage: telegram-search-mcp stats --index <threads.json>')
   const index = await loadIndex(values.index)
-  const first = Math.min(...index.items.map(thread => thread.startedAt))
-  const last = Math.max(...index.items.map(thread => thread.endedAt))
+  let first = Infinity
+  let last = -Infinity
+  for (const thread of index.items) {
+    first = Math.min(first, thread.startedAt)
+    last = Math.max(last, thread.endedAt)
+  }
   const stats = {
     inputMessages: index.inputMessages,
     threadCount: index.threadCount,
     dedupedCount: index.dedupedCount,
     keptCount: index.keptCount,
-    from: new Date(first * 1000).toISOString(),
-    to: new Date(last * 1000).toISOString(),
+    from: index.items.length ? new Date(first * 1000).toISOString() : null,
+    to: index.items.length ? new Date(last * 1000).toISOString() : null,
   }
   console.log(JSON.stringify(stats, null, 2))
 }

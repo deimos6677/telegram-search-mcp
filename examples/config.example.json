@@ -1,8 +1,7 @@
 {
   "chats": {
     "10001": {
-      "name": "Engineering Group",
-      "username": "engineering_demo"
+      "name": "Engineering Group"
     },
     "10002": {
       "name": "AI & Tooling Chat"
