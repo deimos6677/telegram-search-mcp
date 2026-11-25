@@ -1,0 +1,4 @@
+{"id":"101","chatId":"10001","senderId":"u1","senderName":"Alice","timestamp":1790000000,"text":"Docker 部署 PostgreSQL 时遇到 volume 权限报错"}
+{"id":"102","chatId":"10001","senderId":"u2","senderName":"Bob","timestamp":1790000060,"replyToId":"101","text":"把挂载目录的 UID 改成 999 就能启动了"}
+{"id":"103","chatId":"10001","senderId":"u1","senderName":"Alice","timestamp":1790000120,"replyToId":"102","text":"已解决，附上参考文档 https://example.com/postgres-docker"}
+{"id":"201","chatId":"10002","senderId":"u3","senderName":"Carol","timestamp":1790000300,"text":"SQLite FTS5 搭配 BM25 做本地中文检索非常快"}

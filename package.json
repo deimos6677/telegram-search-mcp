@@ -1,0 +1,37 @@
+{
+  "name": "telegram-search-mcp",
+  "version": "0.2.0",
+  "description": "Local-first, read-only MCP server and SQLite FTS5 search engine for exported Telegram chats, X posts, and Obsidian vaults.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "telegram",
+    "mcp",
+    "model-context-protocol",
+    "sqlite",
+    "fts5",
+    "obsidian",
+    "local-first",
+    "search"
+  ],
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "test": "tsx --test test/*.test.ts",
+    "build-db": "tsx src/cli.ts build-db",
+    "query-db": "tsx src/cli.ts query-db",
+    "index": "tsx src/cli.ts index",
+    "search": "tsx src/cli.ts search",
+    "mcp": "tsx src/mcp-server.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

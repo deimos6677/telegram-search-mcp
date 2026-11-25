@@ -1,0 +1,4 @@
+{"id":"1","chatId":"g1","senderId":"u1","senderName":"Alice","timestamp":1790000000,"text":"Docker 部署 PostgreSQL 启动失败了"}
+{"id":"2","chatId":"g1","senderId":"u2","senderName":"Bob","timestamp":1790000060,"text":"检查一下 volume 权限配置"}
+{"id":"3","chatId":"g1","senderId":"u1","senderName":"Alice","timestamp":1790000120,"text":"教程在这里 https://example.com/guide"}
+{"id":"4","chatId":"g2","senderId":"u3","senderName":"Carol","timestamp":1790000200,"text":"Redis 8 发布预览版了，有需要的看看"}

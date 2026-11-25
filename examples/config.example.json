@@ -1,0 +1,22 @@
+{
+  "chats": {
+    "10001": {
+      "name": "Engineering Group",
+      "username": "engineering_demo"
+    },
+    "10002": {
+      "name": "AI & Tooling Chat"
+    }
+  },
+  "excludedChats": [
+    "99999"
+  ],
+  "aliasGroups": [
+    ["k8s", "kubernetes", "容器编排"],
+    ["pg", "postgres", "postgresql", "数据库"],
+    ["rag", "检索增强"]
+  ],
+  "compoundFixes": [
+    ["云\\s+原\\s+生", "云原生"]
+  ]
+}
