@@ -2,7 +2,7 @@
 
 # telegram-search-mcp
 
-**Local-first, read-only MCP server & SQLite FTS5 search engine for exported Telegram chats, X posts, and Obsidian vaults.**
+**Search exported Telegram chats and X posts with SQLite FTS5, then follow the reply chain for context. A read-only MCP interface also lets you search local Obsidian notes.**
 
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22.13-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -20,11 +20,11 @@
 
 High-volume Telegram groups hold valuable troubleshooting logs, firsthand reports, and discussions—yet native chat search lacks ranking, cross-language synonym matching, and thread-level context. Feeding raw chat dumps straight to an LLM also causes hallucinations and broken citations.
 
-`telegram-search-mcp` turns your **local exported JSONL chat archives** (plus optional X/Twitter exports and an Obsidian knowledge base) into a fast, citable **SQLite FTS5** database exposed **read-only over MCP (Model Context Protocol)** and CLI.
+The CLI builds a SQLite FTS5 index from Telegram JSONL archives and optional X exports. Obsidian notes are read directly from the configured vault, not imported into the database.
 
 Every search hit carries exact `chat_id`, `message_id`, sender, timestamp, and permalink, allowing AI agents (Codex, Claude Desktop, Cursor, etc.) to inspect full reply chains before answering with grounded quotes.
 
-> **Strictly local & read-only:** `telegram-search-mcp` never connects to Telegram, never runs Takeout, never requires API keys or user sessions, and never sends your chat data to any cloud service.
+> **Data boundary:** Indexing and search run locally without a Telegram session or API key. An MCP client receives the text it requests; if that client uses a hosted model, its own data policy applies.
 
 ---
 
@@ -175,10 +175,12 @@ For recommended agent prompting & citation rules, see [SKILL.md](SKILL.md).
 
 Keep personal chat IDs and custom synonym tables out of source control by placing a JSON file outside the repo (see [examples/config.example.json](examples/config.example.json)):
 
+The IDs below are synthetic. No public group username is provided. If a configured file is missing, the build stops rather than indexing without its exclusions.
+
 ```json
 {
   "chats": {
-    "10001": { "name": "Engineering Group", "username": "engineering_demo" }
+    "10001": { "name": "Engineering Group" }
   },
   "excludedChats": ["99999"],
   "aliasGroups": [

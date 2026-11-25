@@ -2,7 +2,7 @@
 
 # telegram-search-mcp
 
-**本地优先、只读的 Telegram 导出聊天 / X 推文 / Obsidian 知识库检索 MCP 服务与 SQLite FTS5 引擎。**
+**用 SQLite FTS5 检索已导出的 Telegram 聊天和 X 帖子，沿回复链查看上下文。通过只读 MCP 接口还可以搜索本地 Obsidian 笔记。**
 
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22.13-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -20,11 +20,11 @@
 
 高频交流的 Telegram 群聊里沉淀了大量一手排查记录、经验贴和讨论，但客户端自带搜索缺少相关性排序、跨语言同义词扩展和回复链还原；直接把原始记录丢给大模型，又容易出现幻觉、断章取义或编造出处。
 
-`telegram-search-mcp` 将你**本地已导出的 JSONL 聊天归档**（以及可选的 X/Twitter 导出记录和 Obsidian 笔记库）构建为高性能、可溯源的 **SQLite FTS5** 资料库，并通过 **只读 MCP（Model Context Protocol）服务** 与 CLI 暴露给 AI Agent 或本地检索脚本。
+CLI 将 Telegram JSONL 归档和可选的 X 导出记录写入 SQLite FTS5 索引。Obsidian 笔记直接从指定目录读取，不写入数据库。
 
 每条检索命中都附带精确的 `chat_id`、`message_id`、发送者、时间戳和原消息链接，AI Agent（Codex、Claude Desktop、Cursor 等）可以在作答前拉取完整上下文并引用原文，拒绝拍脑袋编造。
 
-> **纯本地、只读安全边界：** 本项目不连接 Telegram 服务器，不执行 Takeout 抓取，不需要账号 Session 或任何大模型 API Key，也不会把聊天数据上传到云端。
+> **数据边界：** 建库和检索在本机完成，不需要 Telegram 会话或模型密钥。MCP 客户端会收到它请求的原文；如果客户端使用云端模型，还需核对该客户端的数据处理设置。
 
 ---
 
@@ -36,7 +36,7 @@
 - **多源统一检索** — 一个 MCP 服务同时覆盖 Telegram 导出群聊、可选的 X/Twitter 帖子与书签，以及可选的本地 Obsidian 笔记库（自动解析 frontmatter 标签、别名、`[[双链]]` 与反链）。
 - **免重启热更新** — 每次 MCP 工具调用按需打开数据库，后台定时跑完 `build-db` 后立即生效，无需重启 Codex / Claude 客户端。
 - **事务重建与防清库保护** — `build-db` 在单事务内原子替换数据；若导出目录不存在或消息数为 0，直接报错中止，绝不误清空现有数据库。
-- **隐私配置外置隔离** — 个人群 ID、屏蔽群列表与自定义领域词表全部通过 `--config` 或 `TG_INTEL_CONFIG` 放在仓库外部，代码仓零隐私泄露。
+- **隐私配置外置隔离** — 用 `--config` 或 `TG_INTEL_CONFIG` 指向仓库外的私有配置。真实导出和索引放在已忽略的 `data/`，不要替换仓库里已跟踪的示例文件。
 
 ---
 
@@ -175,10 +175,12 @@ npm run mcp
 
 为了不把真实群 ID 和个人领域词表提交到 Git，可将配置 JSON 放在仓库之外（参考 [examples/config.example.json](examples/config.example.json)）：
 
+以下群号均为虚构，示例不绑定任何公开群用户名。若已指定的配置文件不存在，建库会中止，不会在缺少排除名单的情况下继续。
+
 ```json
 {
   "chats": {
-    "10001": { "name": "技术交流群", "username": "engineering_demo" }
+    "10001": { "name": "技术交流群" }
   },
   "excludedChats": ["99999"],
   "aliasGroups": [

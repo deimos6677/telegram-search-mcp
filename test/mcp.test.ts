@@ -101,6 +101,10 @@ test('build-db applies external config chat names, exclusions, and custom aliase
     assert.equal(stats.tgMessages, 3)
     assert.equal(stats.chats.g1.name, 'Dev Ops Group')
     assert.equal(stats.chats.g2, undefined)
+    await rm(configPath)
+    assert.throws(() => buildIntelDb({ dbPath, exportDir: 'test/fixtures', configPath }), /ENOENT/)
+    assert.equal(queryIntelDb(dbPath, { query: 'Redis' }).hits.length, 0)
+    await writeFile(configPath, JSON.stringify({ aliasGroups: [['pgdb', 'postgresql']] }))
     const prev = process.env.TG_INTEL_CONFIG
     process.env.TG_INTEL_CONFIG = configPath
     try {

@@ -55,8 +55,8 @@ function buildAliasMap(groups: string[][]): Map<string, string[]> {
 export function loadIntelConfig(configPath?: string): ResolvedConfig {
   const target = configPath ?? process.env.TG_INTEL_CONFIG
   let raw: IntelConfig = {}
-  if (target && existsSync(target))
-    raw = JSON.parse(readFileSync(target, 'utf8')) as IntelConfig
+  if (target)
+    raw = JSON.parse(readFileSync(target, 'utf8').replace(/^\uFEFF/, '')) as IntelConfig
 
   const chats: Record<string, ChatMeta> = { ...CHATS, ...(raw.chats ?? {}) }
   const excludedChats = new Set((raw.excludedChats ?? []).map(String))
