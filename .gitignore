@@ -12,11 +12,8 @@ out/
 *.sqlite
 *.sqlite3
 *.jsonl
-!test/fixtures/sample.jsonl
-!examples/sample.jsonl
-chats.json
-sender-names.json
-intel-config.json
+!/test/fixtures/sample.jsonl
+!/examples/sample.jsonl
 *.sqlite-wal
 *.sqlite-shm
 *.sqlite3-wal
@@ -25,3 +22,6 @@ intel-config.json
 *.session-journal
 config.json
 private-config.json
+chats.json
+sender-names.json
+intel-config.json
