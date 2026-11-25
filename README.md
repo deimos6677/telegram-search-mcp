@@ -88,7 +88,7 @@ flowchart LR
 ### 1. Install & Verify
 
 ```bash
-git clone https://github.com/deimos6677/deimos.git telegram-search-mcp
+git clone https://github.com/deimos6677/telegram-search-mcp.git
 cd telegram-search-mcp
 npm install
 npm test
